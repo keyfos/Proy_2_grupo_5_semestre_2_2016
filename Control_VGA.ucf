@@ -1,0 +1,86 @@
+## Clock signal
+//NET "reloj_nexys" TNM_NET = sys_clk_pin;
+
+NET "formato" IOSTANDARD = LVCMOS33;
+NET "prog_hora[2]" IOSTANDARD = LVCMOS33;
+NET "prog_hora[1]" IOSTANDARD = LVCMOS33;
+NET "prog_hora[0]" IOSTANDARD = LVCMOS33;
+NET "crono_final" IOSTANDARD = LVCMOS33;
+NET "direc_prog[0]" IOSTANDARD = LVCMOS33;
+NET "direc_prog[1]" IOSTANDARD = LVCMOS33;
+//NET "prog_fecha[0] "   IOSTANDARD = "LVCMOS18";	
+NET "prog_fecha[1]" IOSTANDARD = LVCMOS33;
+NET "prog_fecha[2]" IOSTANDARD = LVCMOS33;
+NET "prog_crono[0]" IOSTANDARD = LVCMOS33;
+NET "prog_crono[1]" IOSTANDARD = LVCMOS33;
+NET "prog_crono[2]" IOSTANDARD = LVCMOS33;
+NET "tiempo" IOSTANDARD = LVCMOS33;
+
+#Bank = 35, Pin name = IO_L12P_T1_MRCC_35,					Sch name = CLK100MHZ
+NET "reloj_nexys" IOSTANDARD = LVCMOS33;
+#Bank = 15, Pin name = IO_L3P_T0_DQS_AD1P_15,				Sch name = CPU_RESET
+NET "reset_total" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L8N_T1_AD14N_35,					Sch name = VGA_R0
+NET "color_salida[0]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L7N_T1_AD6N_35,					Sch name = VGA_R1
+NET "color_salida[1]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L1N_T0_AD4N_35,					Sch name = VGA_R2
+NET "color_salida[2]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L8P_T1_AD14P_35,					Sch name = VGA_R3
+NET "color_salida[3]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L2P_T0_AD12P_35,					Sch name = VGA_B0
+NET "color_salida[4]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L4N_T0_35,						Sch name = VGA_B1
+NET "color_salida[5]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L6N_T0_VREF_35,					Sch name = VGA_B2
+NET "color_salida[6]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L4P_T0_35,						Sch name = VGA_B3
+NET "color_salida[7]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L1P_T0_AD4P_35,					Sch name = VGA_G0
+NET "color_salida[8]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L3N_T0_DQS_AD5N_35,				Sch name = VGA_G1
+NET "color_salida[9]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L2N_T0_AD12N_35,					Sch name = VGA_G2
+NET "color_salida[10]" IOSTANDARD = LVCMOS33;
+#Bank = 35, Pin name = IO_L3P_T0_DQS_AD5P_35,				Sch name = VGA_G3
+NET "color_salida[11]" IOSTANDARD = LVCMOS33;
+#Bank = 15, Pin name = IO_L4P_T0_15,						Sch name = VGA_HS
+NET "hsync" IOSTANDARD = LVCMOS33;
+#Bank = 15, Pin name = IO_L3N_T0_DQS_AD1N_15,			
+NET "vsync" IOSTANDARD = LVCMOS33;
+
+NET "reloj_nexys" LOC = E3;
+#Bank = 15, Pin name = IO_L3P_T0_DQS_AD1P_15,				Sch name = CPU_RESET
+NET "reset_total" LOC = C12;
+#Bank = 35, Pin name = IO_L8N_T1_AD14N_35,					Sch name = VGA_R0
+NET "color_salida[0]" LOC = A3;
+#Bank = 35, Pin name = IO_L7N_T1_AD6N_35,					Sch name = VGA_R1
+NET "color_salida[1]" LOC = B4;
+#Bank = 35, Pin name = IO_L1N_T0_AD4N_35,					Sch name = VGA_R2
+NET "color_salida[2]" LOC = C5;
+#Bank = 35, Pin name = IO_L8P_T1_AD14P_35,					Sch name = VGA_R3
+NET "color_salida[3]" LOC = A4;
+#Bank = 35, Pin name = IO_L2P_T0_AD12P_35,					Sch name = VGA_B0
+NET "color_salida[4]" LOC = B7;
+#Bank = 35, Pin name = IO_L4N_T0_35,						Sch name = VGA_B1
+NET "color_salida[5]" LOC = C7;
+#Bank = 35, Pin name = IO_L6N_T0_VREF_35,					Sch name = VGA_B2
+NET "color_salida[6]" LOC = D7;
+#Bank = 35, Pin name = IO_L4P_T0_35,						Sch name = VGA_B3
+NET "color_salida[7]" LOC = D8;
+#Bank = 35, Pin name = IO_L1P_T0_AD4P_35,					Sch name = VGA_G0
+NET "color_salida[8]" LOC = C6;
+#Bank = 35, Pin name = IO_L3N_T0_DQS_AD5N_35,				Sch name = VGA_G1
+NET "color_salida[9]" LOC = A5;
+#Bank = 35, Pin name = IO_L2N_T0_AD12N_35,					Sch name = VGA_G2
+NET "color_salida[10]" LOC = B6;
+#Bank = 35, Pin name = IO_L3P_T0_DQS_AD5P_35,				Sch name = VGA_G3
+NET "color_salida[11]" LOC = A6;
+#Bank = 15, Pin name = IO_L4P_T0_15,						Sch name = VGA_HS
+NET "hsync" LOC = B11;
+#Bank = 15, Pin name = IO_L3N_T0_DQS_AD1N_15,			
+NET "vsync" LOC = B12;
+
+# PlanAhead Generated IO constraints 
+
+NET "prog_fecha[0]" IOSTANDARD = LVCMOS33;
