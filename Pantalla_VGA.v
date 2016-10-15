@@ -23,35 +23,32 @@ module Pantalla_VGA(
 	input [1:0] dir_prog,
 	 input [2:0] p_crono, p_fecha, p_hora,
 	 input crono_end, am_pm, formato,
-	 input [7:0] hora, min, seg, dia, mes, year, hcrono, mcrono, scrono,
+	 input [7:0] hora, min, seg, dia, mes, year, hcrono, mcrono, scrono,  hcrono_run, mcrono_run, scrono_run,
     input [9:0] pixel_x,
 	 input [9:0] pixel_y,
 	 output reg [11:0] color
 	);
 	
-	 wire [7:0] palabra;
+	wire [7:0] palabra;
 	 wire fuente_bit;
 	 wire [10:0] dir_memo;
-	 wire hour_a, hour_b,     hour_g;
-	 wire cron_a, cron_b, cron_c;
+	 wire hour_a, hour_b, hour_g;
+	 wire cron_a, cron_b, cron_c, cron_d;
 	 wire prog_a, prog_b, prog_c, prog_d, prog_e;
 	 wire flec_u, flec_d, flec_r, flec_l;
-	 wire divisor_pant;
+	wire divisor_pant;
 
-
-	//Señales asignadas para la dirección de los bits que tendrán los caracteres en la VGA
 	 wire [2:0] db_f_a, db_f_b; 
 	 wire [2:0] db_h_a, db_h_b,  db_h_f, db_h_g;
-	 wire [2:0] db_c_a, db_c_b, db_c_c; 
+	 wire [2:0] db_c_a, db_c_b, db_c_c, db_c_d; 
 	 wire [2:0] db_p_a, db_p_b, db_p_c, db_p_d, db_p_e;
 	 wire [2:0] db_a_u, db_a_d, db_a_r, db_a_l;
 	 wire [2:0] db_d_p;//divisor de pantalla
 	 reg [2:0] dir_bit;
 	 
-	 //Señales asignadas para definir la fila en la cual se pintará los bits (char_address)
 	 wire [3:0] df_f_a, df_f_b;
 	 wire [3:0] df_h_a, df_h_b,   df_h_f, df_h_g;
-	 wire [3:0] df_c_a, df_c_b, df_c_c; 
+	 wire [3:0] df_c_a, df_c_b, df_c_c, df_c_d; 
 	 wire [3:0] df_p_a, df_p_b, df_p_c, df_p_d, df_p_e;
 	 wire [3:0] df_d;
 	 wire [3:0] df_a_u, df_a_d, df_a_r, df_a_l;
@@ -60,11 +57,9 @@ module Pantalla_VGA(
 	 wire [3:0] df_c_u_l, df_c_d_l, df_c_u_r, df_c_d_r;
 	 reg [3:0] dir_fila;
 	 
-	 
-	 //Señales de registro para los caracteres que se utilizaran tanto para la pantalla estatica como las señales variantes del RTC 
 	 reg [6:0] caracter_f_a, caracter_f_b;
 	 reg [6:0] caracter_h_a, caracter_h_b,caracter_h_f, caracter_h_g;
-	 reg [6:0] caracter_c_a, caracter_c_b, caracter_c_c; 
+	 reg [6:0] caracter_c_a, caracter_c_b, caracter_c_c, caracter_c_d; 
 	 reg [6:0] caracter_p_a, caracter_p_b, caracter_p_c, caracter_p_d, caracter_p_e;
 	 reg [6:0] caracter_d;
 	 reg [6:0] caracter_a_u, caracter_a_d, caracter_a_r, caracter_a_l;
@@ -77,7 +72,7 @@ module Pantalla_VGA(
 	
 	//---------------------------instancia de memoria----------------------------------//
 	
-	memoria_font instancia_memoria_font (.clk(clk), .addr(dir_memo), .data(palabra));
+	memoria_font memoria_fon (.clk(clk), .addr(dir_memo), .data(palabra));
 	
 	//--------------------------------------------------------------------------------//
 	
@@ -179,31 +174,31 @@ module Pantalla_VGA(
 			4'h3: caracter_h_b={3'b011,min[3:0]};	
 			4'h4: caracter_h_b=7'h3a;					
 			4'h5: caracter_h_b={3'b011,seg[7:4]};
-			4'h6: caracter_h_b={3'b011,seg[3:0]};	
-			4'h7: caracter_h_b=7'h00;					
-			4'h8: caracter_h_b=a_p;						
-			4'h9: caracter_h_b=m_on;					
-			default: caracter_h_b=7'h00;				
+			4'h6: caracter_h_b={3'b011,seg[3:0]};
+			4'h7: caracter_h_b=7'h00;					//
+			4'h8: caracter_h_b=a_p;						// X (a || p)
+			4'h9: caracter_h_b=m_on;						//m
+			default: caracter_h_b=7'h00;				//
 		endcase
 	 end
 	 
-	 
+
 	 assign cron_a= (pixel_y[9:5]==5'd6) && (6'd2<=pixel_x[9:4]) && (pixel_x[9:4]<6'd13);
 	 assign db_c_a=pixel_x[3:1];
 	 assign df_c_a=pixel_y[4:1];
 	 always @*
 	 begin
 		case (pixel_x[7:4])
-			4'h3: caracter_c_a=7'h43;	//C
-			4'h4: caracter_c_a=7'h72;	//r
-			4'h5: caracter_c_a=7'h6f;	//o
-			4'h6: caracter_c_a=7'h6e;	//n
-			4'h7: caracter_c_a=7'h1a;	//ó
-			4'h8: caracter_c_a=7'h6d;	//m
-			4'h9: caracter_c_a=7'h65;	//e
-			4'ha: caracter_c_a=7'h74;	//t
-			4'hb: caracter_c_a=7'h72;	//r
-			4'hc: caracter_c_a=7'h6f;	//o
+			4'h3: caracter_c_a=7'h00;	//
+			4'h4: caracter_c_a=7'h00;	//
+			4'h5: caracter_c_a=7'h54;	//T
+			4'h6: caracter_c_a=7'h69;	//i
+			4'h7: caracter_c_a=7'h6d;	//m
+			4'h8: caracter_c_a=7'h65;	//e
+			4'h9: caracter_c_a=7'h72;	//r
+			4'ha: caracter_c_a=7'h00;	//
+			4'hb: caracter_c_a=7'h00;	//
+			4'hc: caracter_c_a=7'h00;	//
 			default: caracter_c_a=7'h00;	//
 		endcase
 	 end
@@ -214,15 +209,15 @@ module Pantalla_VGA(
 	 always @*
 	 begin
 		case (pixel_x[7:4])
-			4'hf: caracter_c_b={3'b011,hcrono[7:4]};	
-			4'h0: caracter_c_b={3'b011,hcrono[3:0]};	
-			4'h1: caracter_c_b=7'h3a;						
-			4'h2: caracter_c_b={3'b011,mcrono[7:4]};	
-			4'h3: caracter_c_b={3'b011,mcrono[3:0]};	
-			4'h4: caracter_c_b=7'h3a;						
-			4'h5: caracter_c_b={3'b011,scrono[7:4]};	
-			4'h6: caracter_c_b={3'b011,scrono[3:0]};	
-			default: caracter_c_b=7'h00;	
+			4'hf: caracter_c_b={3'b011,hcrono[7:4]};	// decenas hcrono
+			4'h0: caracter_c_b={3'b011,hcrono[3:0]};	// unidades hcrono
+			4'h1: caracter_c_b=7'h3a;						//:
+			4'h2: caracter_c_b={3'b011,mcrono[7:4]};	// decenas mcrono
+			4'h3: caracter_c_b={3'b011,mcrono[3:0]};	// unidades mcrono
+			4'h4: caracter_c_b=7'h3a;						//:
+			4'h5: caracter_c_b={3'b011,scrono[7:4]};	//	decenas scrono
+			4'h6: caracter_c_b={3'b011,scrono[3:0]};	//	unidades scrono
+			default: caracter_c_b=7'h00;	//
 		endcase
 	 end
 	 
@@ -237,20 +232,38 @@ module Pantalla_VGA(
 			default: RING = 7'h00;	
 		endcase
 		case (pixel_x[8:5])
-			4'hf: caracter_c_c=RING;	
-			default: caracter_c_c=7'h00;	
+			4'hf: caracter_c_c=RING;	// ¤
+			default: caracter_c_c=7'h00;	//
 		endcase
 	 end
 	 
+	 assign cron_d= (pixel_y[9:5]==5'd7) && (15<=pixel_x[9:4]) && (pixel_x[9:4]<26);
+	 assign db_c_d=pixel_x[3:1];
+	 assign df_c_d=pixel_y[4:1];
+	 always @*
+	 begin
+		case (pixel_x[7:4])
+			4'hf: caracter_c_d={3'b011,hcrono_run[7:4]};	 
+			4'h0: caracter_c_d={3'b011,hcrono_run[3:0]};	
+			4'h1: caracter_c_d=7'h3a;						//:
+			4'h2: caracter_c_d={3'b011,mcrono_run[7:4]};	
+			4'h3: caracter_c_d={3'b011,mcrono_run[3:0]};
+			4'h4: caracter_c_d=7'h3a;						//:
+			4'h5: caracter_c_d={3'b011,scrono_run[7:4]};
+			4'h6: caracter_c_d={3'b011,scrono_run[3:0]};
+			default: caracter_c_d=7'h00;	//
+		endcase
+	 end
 	 
+
 	 assign divisor_pant = (pixel_y[9:5]==4'd8) && (1<=pixel_x[9:4]) && (pixel_x[9:4]<39);
 	 assign db_d_p=pixel_x[3:1];
 	 assign df_d_p=pixel_y[4:1];
 	 always @*
 	 begin
 		case(pixel_x[9:4])
-			6'h00: caracter_d_p = 7'h16;			
-			default: caracter_d_p = 7'h16;		
+			6'h00: caracter_d_p = 7'h16;			//
+			default: caracter_d_p = 7'h16;		//?
 		endcase
 	 end
 	 
@@ -266,11 +279,11 @@ module Pantalla_VGA(
 			5'h06: caracter_p_a = 7'h67;	//g
 			5'h07: caracter_p_a = 7'h2e;	//.
 			5'h08: caracter_p_a = 7'h00;	//
-			5'h09: caracter_p_a = 7'h46;	//F
-			5'h0a: caracter_p_a = 7'h65;	//e
-			5'h0b: caracter_p_a = 7'h63;	//c
-			5'h0c: caracter_p_a = 7'h68;	//h
-			5'h0d: caracter_p_a = 7'h61;	//a
+			5'h09: caracter_p_a = 7'h46;	//H
+			5'h0a: caracter_p_a = 7'h65;	//o
+			5'h0b: caracter_p_a = 7'h63;	//r
+			5'h0c: caracter_p_a = 7'h68;	//a
+			5'h0d: caracter_p_a = 7'h61;	//
 			5'h0e: caracter_p_a = 7'h00;	//
 			5'h0f: caracter_p_a = 7'h00;	//
 			5'h10: caracter_p_a = 7'h53;	//S
@@ -291,11 +304,11 @@ module Pantalla_VGA(
 			5'h06: caracter_p_b = 7'h67;	//g
 			5'h07: caracter_p_b = 7'h2e;	//.
 			5'h08: caracter_p_b = 7'h00;	//
-			5'h09: caracter_p_b = 7'h48;	//H
-			5'h0a: caracter_p_b = 7'h6f;	//o
-			5'h0b: caracter_p_b = 7'h72;	//r
-			5'h0c: caracter_p_b = 7'h61;	//a
-			5'h0d: caracter_p_b = 7'h00;	//
+			5'h09: caracter_p_b = 7'h48;	//F
+			5'h0a: caracter_p_b = 7'h6f;	//e
+			5'h0b: caracter_p_b = 7'h72;	//c
+			5'h0c: caracter_p_b = 7'h61;	//h
+			5'h0d: caracter_p_b = 7'h00;	//a
 			5'h0e: caracter_p_b = 7'h00;	//
 			5'h0f: caracter_p_b = 7'h00;	//
 			5'h10: caracter_p_b = 7'h53;	//S
@@ -316,11 +329,11 @@ module Pantalla_VGA(
 			5'h06: caracter_p_c = 7'h67;	//g
 			5'h07: caracter_p_c = 7'h2e;	//.
 			5'h08: caracter_p_c = 7'h00;	//
-			5'h09: caracter_p_c = 7'h43;	//C
-			5'h0a: caracter_p_c = 7'h72;	//r
-			5'h0b: caracter_p_c = 7'h6f;	//o
-			5'h0c: caracter_p_c = 7'h6e;	//n
-			5'h0d: caracter_p_c = 7'h6f;	//o
+			5'h09: caracter_p_c = 7'h54;	//T
+			5'h0a: caracter_p_c = 7'h69;	//i
+			5'h0b: caracter_p_c = 7'h6d;	//m
+			5'h0c: caracter_p_c = 7'h65;	//e
+			5'h0d: caracter_p_c = 7'h72;	//r
 			5'h0e: caracter_p_c = 7'h00;	//
 			5'h0f: caracter_p_c = 7'h00;	//
 			5'h10: caracter_p_c = 7'h53;	//S
@@ -342,11 +355,11 @@ module Pantalla_VGA(
 			5'h07: caracter_p_d = 7'h69;	//i
 			5'h08: caracter_p_d = 7'h6f;	//o
 			5'h09: caracter_p_d = 7'h00;	//
-			5'h0a: caracter_p_d = 7'h63;	//c
-			5'h0b: caracter_p_d = 7'h72;	//r
-			5'h0c: caracter_p_d = 7'h6f;	//o
-			5'h0d: caracter_p_d = 7'h6e;	//n
-			5'h0e: caracter_p_d = 7'h6f;	//o
+			5'h0a: caracter_p_d = 7'h54;	//T
+			5'h0b: caracter_p_d = 7'h69;	//i
+			5'h0c: caracter_p_d = 7'h6d;	//m
+			5'h0d: caracter_p_d = 7'h65;	//e
+			5'h0e: caracter_p_d = 7'h72;	//r
 			5'h0f: caracter_p_d = 7'h00;	// 
 			5'h10: caracter_p_d = 7'h53;	//S
 			5'h11: caracter_p_d = 7'h34;	//4
@@ -368,7 +381,7 @@ module Pantalla_VGA(
 			5'h08: caracter_p_e = 7'h74;	//t
 			5'h09: caracter_p_e = 7'h6f;	//o
 			5'h0a: caracter_p_e = 7'h00;	//
-			5'h0b: caracter_p_e = 7'h68;	//h
+			5'h0b: caracter_p_e = 7'h48;	//H
 			5'h0c: caracter_p_e = 7'h6f;	//o
 			5'h0d: caracter_p_e = 7'h72;	//r
 			5'h0e: caracter_p_e = 7'h61;	//a
@@ -387,7 +400,7 @@ module Pantalla_VGA(
 	 begin	 
 		case (pixel_x[7:4])
 			4'hd: caracter_a_u=7'h18;
-			default: caracter_a_u=7'h00;	
+			default: caracter_a_u=7'h00;	//
 		endcase
 	 end
 	 
@@ -420,7 +433,7 @@ module Pantalla_VGA(
 	 begin
 		case (pixel_x[7:4])
 			4'hd: caracter_a_d=7'h19;
-			default: caracter_a_d=7'h00;	
+			default: caracter_a_d=7'h00;	//
 		endcase
 	 end
 	 
@@ -428,10 +441,10 @@ module Pantalla_VGA(
 	  always @* 
 	 begin
 	 dir_bit= pixel_x[3:1];
-	 color=12'h099;	//se asigna color de fondo de la VGA (celeste)							
+	 color=12'h099;								
 		if (date_a) 
 			begin caracter=caracter_f_a; dir_fila= df_f_a; dir_bit=db_f_a; 
-				if (fuente_bit) color=12'hfff;				//se asigna color de caracteres mostrados en pantalla (blanco)
+				if (fuente_bit) color=12'hfff;				
 			end 
 		else if (date_b) 
 			begin caracter=caracter_f_b; dir_fila= df_f_b; dir_bit=db_f_b; 
@@ -482,10 +495,10 @@ module Pantalla_VGA(
 				else if (fuente_bit) color=12'hfff;
 			end 
 
-		else if (hour_g) 
-			begin caracter=caracter_h_g; dir_fila= df_h_g; dir_fila=db_h_g; 
-				if (fuente_bit) color=12'hfff;				
-			end
+//		else if (hour_g) 
+//			begin caracter=caracter_h_g; dir_fila= df_h_g; dir_fila=db_h_g; 
+//				if (fuente_bit) color=12'hfff;				
+//			end
 		
 		else if (cron_a) 
 			begin caracter=caracter_c_a; dir_fila= df_c_a; dir_bit=db_c_a; 
@@ -512,11 +525,17 @@ module Pantalla_VGA(
 				end
 				else if (fuente_bit) color=12'hfff;
 			end
+			
 		else if (cron_c)  
 			begin caracter=caracter_c_c; dir_fila= df_c_c; dir_bit=db_c_c; 
 				if (fuente_bit) color=12'he00;			
 			end
-
+			
+		else if (cron_d)  
+			begin caracter=caracter_c_d; dir_fila= df_c_d; dir_bit=db_c_d; 
+				if (fuente_bit) color=12'he00;			
+         end
+			
 		else if (divisor_pant)
 			begin caracter=caracter_d_p; dir_fila= df_d_p; dir_bit=db_d_p; 
 				if (fuente_bit) color=12'h643;			//Linea divisoria
@@ -541,6 +560,7 @@ module Pantalla_VGA(
 			begin caracter=caracter_p_e; dir_fila= df_p_e; dir_bit=db_p_e; 
 				if (fuente_bit) color=12'hfff;				
 			end
+		
 			
 		else if (flec_u)
 			begin caracter=caracter_a_u; dir_fila= df_a_u; dir_bit=db_a_u; 
