@@ -114,7 +114,8 @@ begin
 		ADout[0]<=0;
 		ADout[1]<=0;
 		ADout[2]<=0;
-		if (fin==1)ADout[3]<=0;
+		if (fin==1)
+		ADout[3]<=0;
 		else ADout[3]<=inic;
 		ADout[4]<=format;
 		ADout[5]<=lock;

@@ -39,7 +39,6 @@ module FMSPrincipal(
 	 output reg lock,
 	 output reg [1:0]selmuxdt,
 	 output reg [2:0]selmuxctr
-//	 output reg hs
 	
     );
 reg [11:0]contador;
@@ -51,7 +50,7 @@ always @(posedge clock)
 	begin
 	if (reset)
 	begin
-//		hs<=0;
+
 		finref<=0;
 		ENchora<=0;
 		ENcfecha<=0;
@@ -83,11 +82,10 @@ always @(posedge clock)
 		ENgcrono<=0;
 		contador<=contador+1'b1;
 		end
-	else if (contador==370) // se extraen los datos del RTC
+	else if (contador==370) 
 		begin
 		if (contEdatos==0)
 			begin 
-//			hs<=0;
 			ENedatos<=1;
 			selmuxctr<=2;
 			if (ENccrono==0)selmuxdt<=0;
@@ -103,9 +101,8 @@ always @(posedge clock)
 		contador<=contador+1'b1;
 		end
 	
-	else if (contador==820) //se ve si existe algun cambio en el formato, cronometro o bloqueo
+	else if (contador==820)
 		begin
-//		hs<=1;
 		ENcompa<=1;
 		if (cronoini!=crini||finref<fin)
 		begin
@@ -139,7 +136,7 @@ always @(posedge clock)
 		end
 		
 		
-		else if (contador==863)//se vuelve a obtener los datos si se modifico algo en bloque chcrfolo
+		else if (contador==863)
 			begin
 			if (selmuxctr==1)
 				begin
@@ -149,7 +146,7 @@ always @(posedge clock)
 			else contador<=contador+1'b1;
 			end
 			
-		else if (contador==864)//se reinicia el cronometro en caso de alcanzar el limite programado y desactivada la alarma
+		else if (contador==864)
 			begin
 			if(fin==1&&cronoini==0)
 				begin
@@ -159,7 +156,7 @@ always @(posedge clock)
 			else contador<=1024;
 			end
 		
-		else if(contador==1024)//se comprueba si se desea programar la hora, fecha o cronometro
+		else if(contador==1024)
 		begin
 			if (Phora==1&&lock==1)
 				begin
@@ -185,7 +182,7 @@ always @(posedge clock)
 			
 		end
 			
-		else if (contador==1026)//se guardan los cambios en caso de haber cambiado la hora o la fecha
+		else if (contador==1026)
 		begin
 		if (Phora==0&&selmuxdt==1)
 			begin
@@ -210,7 +207,7 @@ always @(posedge clock)
 			ENgfecha<=0;
 			contador<=contador+1'b1;
 		end
-		else if (contador==1230)//en caso de terminar de guardar, se vuelven al inicio
+		else if (contador==1230)
 			begin
 			lock<=0;
 			contador<=370;

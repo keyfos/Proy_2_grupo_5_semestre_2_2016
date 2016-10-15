@@ -221,16 +221,21 @@ begin
 		
 		if (UP>U)
 		begin
-			if (Contador==1&&HC[7:4]==1&&F==1&&varin==2)varout<=0;
-			else if (Contador==1&&HC[7:4]==2&&F==0&&varin==3)varout<=0;
-			else if ((Contador==1||Contador==3||Contador==5)&&varin==9)varout<=0;
+			if (Contador==1&&HC[7:4]==1&&F==1&&varin==2)
+			varout<=0;
+			else if (Contador==1&&HC[7:4]==2&&F==0&&varin==3)
+			varout<=0;
+			else if ((Contador==1||Contador==3||Contador==5)&&varin==9)
+			varout<=0;
 			else if (Contador==0 && F==1 && varin==1)
 				begin
 				varout<=0;
 				AmPm<=~AmPm;
 				end
-			else if (varin==2 && Contador==0)varout<=0;
-			else if ((Contador==2||Contador==4)&&varin==5)varout<=0;
+			else if (varin==2 && Contador==0)
+			varout<=0;
+			else if ((Contador==2||Contador==4)&&varin==5)
+			varout<=0;
 			else if (Contador==0 && F==1 && varin==0)
 				begin
 				varout<=1;

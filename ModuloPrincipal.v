@@ -51,13 +51,6 @@ module ModuloPrincipal(
 	 wire PUP;
 	 wire [7:0]ADOUT;
 	 wire r_lent;
-    //wire HS;
-	 //wire [5:0] Int_LED;
-	 
-//	Interfaz_leds inst_LEDS(
-//	.reset(Switch[5]), .clk(clk_100MHz),
-//	.leds(Int_LED)
-//    );
 	 
 	Control_VGA Control_VG (
 		.reloj_nexys(clk_100MHz), 
@@ -74,10 +67,16 @@ module ModuloPrincipal(
 		.seg_x(seg_x), 
 		.dia_x(day), 
 		.mes_x(month), 
-		.year_x(year), 
-		.hora_crono(Hcr), 
-		.min_crono(Mcr), 
-		.seg_crono(Scr),
+		.year_x(year),
+		.hora_crono(pr_hora),
+		.min_crono(pr_minuto),
+		.seg_crono(pr_segundo),			
+//		.hora_crono(Hcr), 
+//		.min_crono(Mcr), 
+//		.seg_crono(Scr),
+		.h_run(Hcr), 
+		.m_run(Mcr), 
+		.s_run(Scr),
 		.color_salida(Color),		
 		.hsync(hsync), 
 		.vsync(vsync)
@@ -131,5 +130,5 @@ module ModuloPrincipal(
 
 assign ADout = (~PUP) ? ADOUT : 8'hzz;
 //assign LED=Int_LED;
-//assign clknex=clk_100MHz;
+assign clknex=clk_100MHz;
 endmodule

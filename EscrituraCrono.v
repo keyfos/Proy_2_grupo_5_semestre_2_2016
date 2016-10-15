@@ -20,10 +20,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 module EscrituraCrono(
 	 input EN,
-    input BTup,
-    input BTdown,
-    input BTl,
-    input BTr,
+    input UP,
+    input DOWN,
+    input LEFT,
+    input RIGHT,
 	 input clk,
 	 input reset,
     output reg [7:0] HCcr,
@@ -32,11 +32,11 @@ module EscrituraCrono(
 	 output reg [2:0]contador
     );
 	 
-	 reg [2:0]step;
-	 reg BTupref;
-	 reg BTdownref;
-	 reg BTlref;
-	 reg BTrref;
+	 reg [2:0]cont2;
+	 reg U;
+	 reg D;
+	 reg L;
+	 reg R;
 	 reg [3:0] varin;
 	 reg [3:0] varout;
 	 
@@ -45,11 +45,11 @@ begin
 	if (reset)
 	begin
 		contador<=0;
-		step<=0;
-		BTupref<=0;
-		BTdownref<=0;
-	   BTlref<=0;
-	   BTrref<=0;
+		cont2<=0;
+		U<=0;
+		D<=0;
+	   L<=0;
+		R<=0;
 		
 		HCcr<=0;
 		MCcr<=0;
@@ -59,35 +59,35 @@ begin
 	end
 	else if (EN)
 	begin
-	if (step==0)
+	if (cont2==0)
 	begin
-		step<=step+1'b1;
+		cont2<=cont2+1'b1;
 	end
-	else if (step==1)//paso 1
+	else if (cont2==1)//paso 1
 		begin
-		if (BTr>BTrref)
+		if (RIGHT>R)
 		begin
 			if (contador==5)
 			contador<=0;
 			else contador<=contador+1'b1;
-			BTrref<=BTr;
+			R<=RIGHT;
 		end
-		else if (BTr<BTrref)
-			BTrref<=BTr;
+		else if (RIGHT<R)
+			R<=RIGHT;
 		
-		if (BTl>BTlref)
+		if (LEFT>L)
 		begin
 			if (contador==0)
 			contador<=5;
 			else contador<=contador-1'b1;
-			BTlref<=BTl;
+			L<=LEFT;
 		end
 		
-		step<=step+1'b1;
+		cont2<=cont2+1'b1;
 		end
 		
-			
-		else if (step==2)//paso 2
+// Determina el cambio en las decenas y unidades de hora, minuto y segundo del cronómetro	
+		else if (cont2==2)
 			begin
 			case (contador)
 			3'b000: varin<=HCcr[7:4];
@@ -99,18 +99,21 @@ begin
 			default varin<=HCcr[7:4];
 			endcase
 			
-			step<=step+1'b1;
+			cont2<=cont2+1'b1;
 			end
 		
-		else if (step==3)
+		else if (cont2==3)
 		begin
-		if (BTdown==BTdownref && BTup==BTupref)
+		if (DOWN==D && UP==U)
 		varout<=varin;
-		
-		if (BTup>BTupref)
+
+		if (UP>U)
 		begin
-			if (varin==5&&(contador==2||contador==4))varout<=0;
-			else if (varin==9&&(contador==3||contador==5))varout<=0;
+		//
+			if (varin==5&&(contador==2||contador==4))
+				varout<=0;
+			else if (varin==9&&(contador==3||contador==5))
+				varout<=0;
 			else if (contador==0&&varin==1)
 				begin
 				varout<=2;
@@ -120,11 +123,11 @@ begin
 			else if (varin==4 && contador==1 && HCcr==2)varout<=0;
 			else if (varin==9 && contador==1)varout<=0;
 			else varout<=varin+1'b1;
-			BTupref<=BTup;
+			U<=UP;
 		end
 		
 		
-		if (BTdown>BTdownref)
+		if (DOWN>D)
 		begin
 			if (varin==0)
 			begin
@@ -139,13 +142,13 @@ begin
 				else if (contador==3||contador==5)varout<=9;
 			end
 			else varout<=varin-1'b1;
-			BTdownref<=BTdown;
+			D<=DOWN;
 		end
 		
-		step<=step+1'b1;
+		cont2<=cont2+1'b1;
 		end
 		
-		else if (step==4)
+		else if (cont2==4)
 		begin
 		case (contador)
 			3'b000: HCcr[7:4]<=varout;
@@ -156,20 +159,20 @@ begin
 			3'b101: SCcr[3:0]<=varout;
 			default HCcr[7:4]<=varout;
 		endcase
-		step<=1;
+		cont2<=1;
 		end
-		if (BTl<BTlref)
-			BTlref<=BTl;
-		if (BTr<BTrref)
-			BTrref<=BTr;
-		if (BTup<BTupref)
-			BTupref<=BTup;
-		if (BTdown<BTdownref)
-			BTdownref<=BTdown;
+		if (LEFT<L)
+			L<=LEFT;
+		if (RIGHT<R)
+			R<=RIGHT;
+		if (UP<U)
+			U<=UP;
+		if (DOWN<D)
+			D<=DOWN;
 	end
 	else 
 	begin
-	step<=0;
+	cont2<=0;
 	contador<=0;
 	end
 end

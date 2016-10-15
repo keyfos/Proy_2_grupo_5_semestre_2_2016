@@ -30,7 +30,6 @@ module ControlRTC(
 	 output [1:0]Smuxdt,
 	 output Pullup,tim,
 	 output formato
-//	 output handS
     );
 wire ENch,ENcf,ENcc,ENgh,ENgf,ENgc,ENed,ENci,ENcomp,lck;
 wire ap1,ap2;
@@ -40,6 +39,16 @@ wire [23:0]dt11,dt12,dt21,dt22;
 wire final;
 wire [2:0]Smuxctr;
 
+//Inicializacion Inicializacio(
+//		.clock(clk),
+//		.reset(rst),
+//		.cs(M1[9]),
+//		.ad(M1[11]),
+//		.rd(M1[10]),
+//		.wr(M1[8]),
+//		.ADout(M1[7:0])
+//);
+//
 Inicio Inici(
 		.clki(clk),
 		.rst(rst),
@@ -51,8 +60,8 @@ Inicio Inici(
 );
 //
 FFs FF(
-		.aumentar(Up),
-		.disminuir(Down),
+		.up(Up),
+		.down(Down),
 		.left(Left),
 		.right(Right),
 		.ph(Switch1),
@@ -94,7 +103,6 @@ FMSPrincipal FMSPrincipa(
 		.lock(lck),
 		.selmuxdt(Smuxdt),
 		.selmuxctr(Smuxctr)
-//		.hs(handS)
 );
 //
 LecturaRTC LecturaRT(
@@ -123,10 +131,10 @@ LecturaRTC LecturaRT(
 //
 EscrituraCrono EscrituraCron(
 		.EN(ENcc),
-		.BTup(arriba),
-		.BTdown(abajo),
-		.BTl(izq),
-		.BTr(der),
+		.UP(arriba),
+		.DOWN(abajo),
+		.LEFT(izq),
+		.RIGHT(der),
 		.clk(clk),
 		.reset(rst),
 		.HCcr(horapr),

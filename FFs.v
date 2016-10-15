@@ -19,8 +19,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module FFs(
-    input wire aumentar,
-    input wire disminuir,
+    input wire up,
+    input wire down,
 	 input wire left,
 	 input wire right,
 	 input wire format,
@@ -70,8 +70,8 @@ if (reset)
 	end
 else if (delay==0)
 	begin
-	pas1[0]<=aumentar;
-	pas1[1]<=disminuir;
+	pas1[0]<=up;
+	pas1[1]<=down;
 	pas1[2]<=left;
 	pas1[3]<=right;
 	pas1[4]<=format;
@@ -146,7 +146,7 @@ else if (delay==0)
 		prc<=pas6[7];
 	if (pas1[8]==pas2[8]&&pas1[8]==pas3[8]&&pas1[8]==pas4[8]&&pas1[8]==pas5[8]&&pas1[8]==pas6[8])
 		icr<=pas6[8];
-	delay<=delay+1'b1;
+		delay<=delay+1'b1;
 	end
 	else if(delay==2000)delay<=0;
 	else 	delay<=delay+1'b1;
